@@ -1,0 +1,35 @@
+---
+title: "Statistical Inference Course Project1"
+author: "doyougnu"
+date: "July 20, 2015"
+output: pdf_document
+---
+
+###Overview
+Overview to be writting here...
+
+###Simulations
+```{r Simulations}
+#number of simulations to run
+simnum <- 1000
+
+#number of distributions to generate
+exp_n <- 40
+
+#exponential distribution parameters
+exp_lambda <- 0.2
+expMean <- NULL
+expVar <-NULL
+for (a in 1:simnum) {
+    expMean = c(expMean, mean(rexp(exp_n, exp_lambda)))
+    expVar = c(expVar, var(rexp(exp_n, exp_lambda)))
+}
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
