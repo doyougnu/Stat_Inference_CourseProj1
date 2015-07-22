@@ -9,9 +9,9 @@ output: pdf_document
 Overview to be writting here...
 
 ###Simulations
-```{r Simulations}
+```{r Simulations, echo = TRUE}
 #number of simulations to run
-simnum <- 1000
+simnum <- 10000
 
 #number of distributions to generate
 exp_n <- 40
@@ -26,10 +26,37 @@ for (a in 1:simnum) {
 }
 ```
 
-You can also embed plots, for example:
+###Plots Comparing Simulation to Population
+```{r meanPlot, echo = TRUE}
+#load ggplot2
+library(ggplot2)
 
-```{r, echo=FALSE}
-plot(cars)
+#Compare Means
+popMean <- 1 / exp_lambda
+simMean <- mean(expMean)
+popMean
+simMean
+
+#Compare Means visually
+plt <- ggplot() + aes(expMean) + 
+    geom_histogram(binwidth = 0.3, colour = "black", fill = "white") +
+    geom_vline(xintercept = 1 / exp_lambda, colour = "red")
+plt
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r varPlot, echo = TRUE}
+#use Freedman-Diaconis rule for binwidth
+bw <- round(diff(range(expVar) / (2 * IQR(expVar) / length(expVar)^(1/3))))
+
+#Compare Variances
+popVariance <- (1 / exp_lambda) ^ 2
+simVariance <- mean(expVar)
+popVariance
+simVariance
+
+#compare Variances visually
+plt.two <- ggplot() + aes(expVar) +
+    geom_histogram(binwidth = 0.3, colour = "black", fill = "white") +
+    geom_vline(binwidth = bw, xintercept = (1 / exp_lambda)^2, colour = "red")
+plt.two
+```
