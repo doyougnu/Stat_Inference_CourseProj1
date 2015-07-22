@@ -11,7 +11,7 @@ Overview to be writting here...
 ###Simulations
 ```{r Simulations, echo = TRUE}
 #number of simulations to run
-simnum <- 10000
+simnum <- 1000
 
 #number of distributions to generate
 exp_n <- 40
