@@ -25,7 +25,10 @@ simMatrix <- matrix(rexp(exp_n * simnum, rate = exp_lambda), simnum, exp_n)
 expMean <- rowMeans(simMatrix)
 ```
 
-The simulation is done by....
+The simulation is done by generating 40,000 random exponential deviates with a lambda value = 0.2. Then
+populating a 1000 x 40 matrix with those values. We then call the rowMeans function to find the mean of
+each row (that is the mean of 40 simulation random exponential deviates). The rowMeans create our 
+simulation distribution of means, called expMean. 
 
 ##Plots Comparing Simulation to Population
 ```{r meanComp, echo = TRUE}
@@ -39,7 +42,7 @@ popMean
 simMean
 ```
 
-The means are very close, the pop mean is ..., the sim mean is...
+The means are very close, the population mean is `r popMean`, the simulated mean is `r simMean`
 
 ```{r varComp, echo = TRUE}
 #Compare Variances
@@ -49,7 +52,7 @@ popVariance
 simVariance
 ```
 
-Similarly for the Variances, the pop variance is ..., the sim variance is ...
+Similarly for the Variances, the pop variance is `r popVariance`, the sim variance is `r simVariance`
 
 ##Comparison between Random Variables and Sample Distributions
 ```{r simPlot, echo = TRUE}
