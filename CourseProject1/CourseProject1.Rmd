@@ -5,10 +5,10 @@ date: "July 20, 2015"
 output: pdf_document
 ---
 
-###Overview
+##Overview
 Overview to be writting here...
 
-###Simulations
+##Simulations
 ```{r Simulations, echo = TRUE}
 #set seed
 set.seed = 1234
@@ -21,16 +21,14 @@ exp_n <- 40
 
 #exponential distribution parameters
 exp_lambda <- 0.2
-expMean <- NULL
-expVar <-NULL
-for (a in 1:simnum) {
-    expMean = c(expMean, mean(rexp(exp_n, exp_lambda)))
-    expVar = c(expVar, var(rexp(exp_n, exp_lambda)))
-}
+simMatrix <- matrix(rexp(exp_n * simnum, rate = exp_lambda), simnum, exp_n)
+expMean <- rowMeans(simMatrix)
 ```
 
-###Plots Comparing Simulation to Population
-```{r meanPlot, echo = TRUE}
+The simulation is done by....
+
+##Plots Comparing Simulation to Population
+```{r meanComp, echo = TRUE}
 #load ggplot2
 library(ggplot2)
 
@@ -39,41 +37,32 @@ popMean <- 1 / exp_lambda
 simMean <- mean(expMean)
 popMean
 simMean
+```
 
-#Compare Means visually
-plt <- qplot(expMean) + 
-    xlab("Mean of 40 Exponential Samples") +
-    ggtitle("Distribution of Sample Means") +
-    geom_vline(xintercept = 1 / exp_lambda, colour = "red", size = 2) +
+The means are very close, the pop mean is ..., the sim mean is...
+
+```{r varComp, echo = TRUE}
+#Compare Variances
+popVariance <- (1 / exp_lambda) ^ 2 / exp_n
+simVariance <- var(expMean)
+popVariance
+simVariance
+```
+
+Similarly for the Variances, the pop variance is ..., the sim variance is ...
+
+##Comparison between Random Variables and Sample Distributions
+```{r simPlot, echo = TRUE}
+#load libs
+library(ggplot2)
+
+#compare Variances visually
+plt <- qplot(expMean, main = "Distribution of Sample Means", alpha = 0.3) +
+    xlab("Distribution of Means from 40 Exponential Deviates") +
+    geom_vline(size = 2, xintercept = popMean, colour = "red") +
+    geom_vline(size = 1, xintercept = simMean, colour = "blue") +
+    theme(legend.position = "none")
 plt
 ```
 
-```{r varPlot, echo = TRUE}
-#Compare Variances
-popVariance <- (1 / exp_lambda) ^ 2
-simVariance <- mean(expVar)
-popVariance
-simVariance
-
-#compare Variances visually
-plt.two <- qplot(expVar, main = "Distribution of Sample Variances") +
-    xlim(0, 150) +
-    xlab("Variance of 40 Exponential Samples") +
-    geom_vline(size = 2, xintercept = (1 / exp_lambda)^2, colour = "red")
-plt.two
-```
-
-###Comparison between Random Variables and Sample Distributions
-```{r compPlots, echo = TRUE, fig.height=10, fig.width=10}
-#load libs
-library(gtable)
-library(gridExtra)
-
-#Make 1000 Exponentials
-r1 <- qplot(rexp(simnum, exp_lambda),  
-            main = "1000 Random Exponentials") +
-    xlab("Random Generated Exponential Deviates") 
-
-#plot
-grid.arrange(r1, plt, plt.two)
-```
+In this plot we can see the CLT in action ...
