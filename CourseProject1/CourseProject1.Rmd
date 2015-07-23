@@ -66,3 +66,12 @@ plt
 ```
 
 In this plot we can see the CLT in action ...
+
+##Normality test
+```{r normTest, echo = TRUE}
+#perform shapiro normality test
+shapiro.test(expMean)
+
+#plot QQ plot
+qqnorm(expMean); qqline(expMean, col = 2)
+```
