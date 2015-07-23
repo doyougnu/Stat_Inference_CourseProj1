@@ -10,6 +10,9 @@ Overview to be writting here...
 
 ###Simulations
 ```{r Simulations, echo = TRUE}
+#set seed
+set.seed = 1234
+
 #number of simulations to run
 simnum <- 1000
 
@@ -38,9 +41,10 @@ popMean
 simMean
 
 #Compare Means visually
-plt <- ggplot() + aes(expMean) + 
-    geom_histogram(binwidth = 0.3, colour = "black", fill = "white") +
-    geom_vline(xintercept = 1 / exp_lambda, colour = "red")
+plt <- qplot(expMean) + 
+    xlab("Mean of 40 Exponential Samples") +
+    ggtitle("Distribution of Sample Means") +
+    geom_vline(xintercept = 1 / exp_lambda, colour = "red", size = 2) +
 plt
 ```
 
@@ -52,7 +56,24 @@ popVariance
 simVariance
 
 #compare Variances visually
-plt.two <- qplot(expVar) +
-    geom_vline(binwidth = 0.3, xintercept = (1 / exp_lambda)^2, colour = "red")
+plt.two <- qplot(expVar, main = "Distribution of Sample Variances") +
+    xlim(0, 150) +
+    xlab("Variance of 40 Exponential Samples") +
+    geom_vline(size = 2, xintercept = (1 / exp_lambda)^2, colour = "red")
 plt.two
+```
+
+###Comparison between Random Variables and Sample Distributions
+```{r compPlots, echo = TRUE, fig.height=10, fig.width=10}
+#load libs
+library(gtable)
+library(gridExtra)
+
+#Make 1000 Exponentials
+r1 <- qplot(rexp(simnum, exp_lambda),  
+            main = "1000 Random Exponentials") +
+    xlab("Random Generated Exponential Deviates") 
+
+#plot
+grid.arrange(r1, plt, plt.two)
 ```
