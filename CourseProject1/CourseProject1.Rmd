@@ -6,7 +6,10 @@ output: pdf_document
 ---
 
 ##Overview
-Overview to be writting here...
+Then following report will show the Central Limit Theorem (henceforth [CLT]) in action through 
+the generation of a distribution of sample means, calculated from 1000 simulations of 40 random
+exponential deviates. The report will show that the sample mean distribution obeys the CLT 
+by being normal-like distributed, while the population distribution is exponential.
 
 ##Simulations
 ```{r Simulations, echo = TRUE}
@@ -46,12 +49,6 @@ simVariance <- var(expMean)
 ```
 
 Similarly for the Variances, the pop variance is `r popVariance`, the sim variance is `r simVariance`
-
-
-
-
-
-
 
 ##Normality test
 ```{r normTest, echo = TRUE, fig.height=17, fig.width=17}
@@ -94,15 +91,14 @@ grid.arrange(qE, plt, qEQ, qQ)
 In the above plot we can see the CLT in action. Starting from the top left we 
 have the distribution of 1000 random deviates; compare this with the sample of 
 means of 40 random exponential deviates generated 1000 times. As you can see the
-top left plot is clearly exponential while the sample plot (top right) is more 
-of a normal distribution (due to its bell shape).  The red vertical line 
-represents the Theoretical Mean, while the blue line represents the Simulation 
-Mean. As you see the two are extremely close together (I altered the sizes of 
-both lines so one could observe their proximity without overlap). The bottom 
-left plot shows the Normal Quantile plot for the 1000 Random Exponential 
-Deviates, it is obviously non-normal, compared to the plot on the lower right, 
-which shows the Normal Quantile plot of the simulation samples; it is much more 
-normal (Normal distributions are indicated by a linear line in a normal with
-trailing tails, perfom a `r #qplot(sample = rnorm(1000))` to see a normal
-distribution QQ plot though still fails the normality test!) then the
-Exponential Deviate plot. This my friend, is the CLT observed.
+top left plot is clearly exponential while the simulation distribution plot (top
+right) is more of a normal distribution (due to its bell shape).  The red
+vertical line represents the Theoretical Mean, while the blue line represents
+the Simulation Mean. As you see the two are extremely close together (I altered
+the sizes of both lines so one could observe their proximity without overlap).
+The bottom left plot shows the Normal Quantile plot for the 1000 Random
+Exponential Deviates, it is obviously non-normal, compared to the plot on the
+lower right, which shows the Normal Quantile plot of the simulation samples; it
+is much more normal (Normal distributions are indicated by a linear line in a QQ
+plot, perfom a `r "qplot(sample = rnorm(1000))"` to see a normal distribution QQ
+plot) than the Exponential Deviate plot. This my friend, is the CLT observed.
