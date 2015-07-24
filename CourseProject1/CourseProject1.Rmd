@@ -75,7 +75,8 @@ qEQ <- qplot(sample = rexp(simnum, exp_lambda), main = "QQ plot of Random
              Exponential Deviates")
 
 #plot rexp deviates
-qE <- qplot(rexp(simnum, exp_lambda), main = "Distribution of Random Exponential Deviates")
+qE <- qplot(rexp(simnum, exp_lambda), main = "Distribution of Random Exponential Deviates",
+            xlab = "Distribution of Random Exponential Deviates")
 
 #compare Variances visually
 plt <- qplot(expMean, main = "Distribution of Sample Means", alpha = 0.3) +
