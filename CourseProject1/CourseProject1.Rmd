@@ -32,14 +32,9 @@ simulation distribution of means, called expMean.
 
 ##Plots Comparing Simulation to Population
 ```{r meanComp, echo = TRUE}
-#load ggplot2
-library(ggplot2)
-
 #Compare Means
 popMean <- 1 / exp_lambda
 simMean <- mean(expMean)
-popMean
-simMean
 ```
 
 The means are very close, the population mean is `r popMean`, the simulated mean is `r simMean`
@@ -48,16 +43,42 @@ The means are very close, the population mean is `r popMean`, the simulated mean
 #Compare Variances
 popVariance <- (1 / exp_lambda) ^ 2 / exp_n
 simVariance <- var(expMean)
-popVariance
-simVariance
 ```
 
 Similarly for the Variances, the pop variance is `r popVariance`, the sim variance is `r simVariance`
 
-##Comparison between Random Variables and Sample Distributions
-```{r simPlot, echo = TRUE}
+
+
+
+
+
+
+##Normality test
+```{r normTest, echo = TRUE, fig.height=17, fig.width=17}
+
+#perform shapiro normality test
+shapiro.test(expMean)
+
+```
+The shapiro wilk's normality test, test's the Null Hypothesis: That the samples come from a
+normal distribution, against the alternate Hypothesis: That the samples **do not** come from
+a normal distribution. As shown above, our p-value is < 0.05, so our samples do not form a
+normal distribution, but instead are normal-like.
+
+##Visual Comparison of Exponential Population vs. Samples
+```{r plotCompare, echo = TRUE, warning = FALSE, fig.height=17, fig.width=17}
 #load libs
 library(ggplot2)
+library(gridExtra)
+library(gridBase)
+
+#plot QQ plot
+qQ <- qplot(sample = expMean, main = "QQ Plot of Simulated Sample Means")
+qEQ <- qplot(sample = rexp(simnum, exp_lambda), main = "QQ plot of Random
+             Exponential Deviates")
+
+#plot rexp deviates
+qE <- qplot(rexp(simnum, exp_lambda), main = "Distribution of Random Exponential Deviates")
 
 #compare Variances visually
 plt <- qplot(expMean, main = "Distribution of Sample Means", alpha = 0.3) +
@@ -65,16 +86,23 @@ plt <- qplot(expMean, main = "Distribution of Sample Means", alpha = 0.3) +
     geom_vline(size = 2, xintercept = popMean, colour = "red") +
     geom_vline(size = 1, xintercept = simMean, colour = "blue") +
     theme(legend.position = "none")
-plt
+
+#compare plots in single panel
+grid.arrange(qE, plt, qEQ, qQ)
 ```
 
-In this plot we can see the CLT in action ...
-
-##Normality test
-```{r normTest, echo = TRUE}
-#perform shapiro normality test
-shapiro.test(expMean)
-
-#plot QQ plot
-qqnorm(expMean); qqline(expMean, col = 2)
-```
+In the above plot we can see the CLT in action. Starting from the top left we 
+have the distribution of 1000 random deviates; compare this with the sample of 
+means of 40 random exponential deviates generated 1000 times. As you can see the
+top left plot is clearly exponential while the sample plot (top right) is more 
+of a normal distribution (due to its bell shape).  The red vertical line 
+represents the Theoretical Mean, while the blue line represents the Simulation 
+Mean. As you see the two are extremely close together (I altered the sizes of 
+both lines so one could observe their proximity without overlap). The bottom 
+left plot shows the Normal Quantile plot for the 1000 Random Exponential 
+Deviates, it is obviously non-normal, compared to the plot on the lower right, 
+which shows the Normal Quantile plot of the simulation samples; it is much more 
+normal (Normal distributions are indicated by a linear line in a normal with
+trailing tails, perfom a `r #qplot(sample = rnorm(1000))` to see a normal
+distribution QQ plot though still fails the normality test!) then the
+Exponential Deviate plot. This my friend, is the CLT observed.
