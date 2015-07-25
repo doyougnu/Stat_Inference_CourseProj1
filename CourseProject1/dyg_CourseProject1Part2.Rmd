@@ -2,9 +2,8 @@
 title: "Course Project1 Part2"
 author: "doyougnu"
 date: "July 25, 2015"
-output: html_document
+output: pdf_document
 ---
-
 ##Overview
 
 This brief report will explore the ToothGrowth base dataset with R, see C. I.
@@ -14,23 +13,20 @@ statistically significant given the data through the use of two-sample student
 t-testing. This report finds that dose and dose administration method are both 
 statistically significant factors affects the length of guinea pig teeth.
 
-```{r dataPeek, echo = TRUE}
+```{r dataPeek, echo = TRUE, fig.height=3, fig.width=7, size="small"}
 #load data
-library(datasets)
-library(ggplot2)
-data("ToothGrowth")
-df <- ToothGrowth
+library(datasets); library(ggplot2)
+data("ToothGrowth"); df <- ToothGrowth
 
 #lets look at the data
 str(df)
-head(df)
 
 #do some quick plots
 qplot(data = df, x = len, facets = supp ~ dose, color = supp)
 ```
 
-Interesting it looks like data under label "VC" is right shifted compared to 
-data under "OJ" for all levels of dose.
+Interesting it looks like data under label "OJ" is right shifted compared to 
+data under "VC" for all levels of dose.
 
 Lets look at the confidence intervals for each the data grouped by the supp 
 variable, and by the dose variable
@@ -38,33 +34,24 @@ variable, and by the dose variable
 ```{r confInt, echo = TRUE}
 #perform unpaired t.test in R
 tResults <- t.test(len ~ supp, data = df, paired = FALSE)
-
 ```
 
-The above code executes a two sample t test on the ToothGrowth dataset. I use
-the model statement format because it requires less code and is generally more
-readable in my opinion. Read it as, the variable len, by the variable supp, in
-the dataset df, unpaired t-test. One would generally use a paired t-test if the
-experimental samples are identical through the course of the treatment. Or to 
-relate it to the ToothGrowth dataset: The experiment uses 10 guinea pigs, and
-administers 3 different Vitamin C dose levels **but splits** the guinea pigs
-into two groups of Vitamin C application treatmenst. That is one group is "VC"
-and the other is "OJ", hence it is unpaired because **the same guinea pig is not
-undergoing both treament OJ and VC**.
-
-Looking at the results of the t.test the 95% confidence intervals are 
+One would generally use a paired t-test if the experimental samples are
+identical through the course of the treatment. Or to relate it to the
+ToothGrowth dataset: The experiment uses 10 guinea pigs, and administers 3
+different Vitamin C dose levels **but splits** the guinea pigs into two groups
+of Vitamin C application treatmenst. That is one group is "VC" and the other is
+"OJ", hence it is unpaired because **the same guinea pig is not undergoing both
+treament OJ and VC**.
+    Looking at the results of the t.test the 95% confidence intervals are 
 `r tResults$conf.int` and the p-value was `r tResults$p.value` which is greater
 than 0.05, hence we reject the alternate hypothesis (that the means of the two
 samples is different), and accept the Null hypothesis (that the means of the two
-samples is the same). Note that the p-value is very close to the alpha value, 
-hence I would expect this to be statistically significant if more samples were
-collected (doing so in light of this data would be a violation of scientific
-standards in a study though - it is a well known method of p-value hacking)
-
-Not lets investigate the statistical difference between the dose groups. 
-Typically one would peform an ANOVA test to determine if any of the 3 dose 
-groups are significantly different, as we are limited to students t tests I will
-perform a t.test for each dose group combination. 
+samples is the same). 
+Now lets investigate the statistical difference between the dose groups. As we 
+are limited to students t tests I will perform a t.test for each dose group 
+combination, and assume that the data is normally distributed, I will not assume
+equal variances as t.test defaults to a welch's t-test.
 
 ```{r doseTests, echo = TRUE}
 #generate child datasets for VC
@@ -102,8 +89,6 @@ ttest_1.0_2.0_VC_OJ <- ttest_helper(dose.1.0_VC, dose.2.0_OJ)
 ttest_2.0_0.5_VC_OJ <- ttest_helper(dose.2.0_VC, dose.0.5_OJ) 
 ```
 
-Now lets checkout the results. Notice that these t_tests were "paired" as the
-
 ##Results
 ```{r ttestResults, echo = TRUE, warning = FALSE}
 #pack results in a container
@@ -111,11 +96,8 @@ ttest_list <- list(ttest_0.5_1.0_VC, ttest_1.0_2.0_VC, ttest_2.0_0.5_VC,
                 ttest_0.5_1.0_OJ, ttest_1.0_2.0_OJ, ttest_2.0_0.5_OJ,
                 ttest_0.5_VC_OJ, ttest_1.0_VC_OJ, ttest_2.0_VC_OJ,
                 ttest_0.5_1.0_VC_OJ, ttest_1.0_2.0_VC_OJ, ttest_2.0_0.5_VC_OJ)
-
-#I couldn't figure out how to do this programmatically, seems to be hard to
-# in R
-ttest_list_names <-
-    c("ttest_0.5_1.0_VC", "ttest_1.0_2.0_VC", "ttest_2.0_0.5_VC",
+#I couldnt figure how to do this in R, sometimes I wish R was Clojure
+ttest_list_names <- c("ttest_0.5_1.0_VC", "ttest_1.0_2.0_VC", "ttest_2.0_0.5_VC",
       "ttest_0.5_1.0_OJ", "ttest_1.0_2.0_OJ", "ttest_2.0_0.5_OJ",
       "ttest_0.5_VC_OJ", "ttest_1.0_VC_OJ", "ttest_2.0_VC_OJ",
       "ttest_0.5_1.0_VC_OJ", "ttest_1.0_2.0_VC_OJ", "ttest_2.0_0.5_VC_OJ")
@@ -127,26 +109,21 @@ ttest_list_confs <- lapply(ttest_list, function(x) {x[4]})
 #Make data table
 library(data.table)
 dt <- data.table(T_Test = 0, P_Value = rep(0, 12), Conf_Int1 = 0, Conf_Int2 = 0)
-dt[,1] <- ttest_list_names
-dt[,2] <- ttest_list_pvals
-dt[,3] <- ttest_list_confs[[1]]
-dt[,4] <- ttest_list_confs[[2]]
+dt[,1] <- ttest_list_names; dt[,2] <- ttest_list_pvals;
+dt[,3] <- ttest_list_confs[[1]]; dt[,4] <- ttest_list_confs[[2]]
 
 #convert to real table
 library(knitr)
 kable(dt)
 ```
 
-
 ##Conclusions
 Starting from the most significant p-value, we can see that every level of dose,
-when compared to each other level is statistically significant - that is to say
-that we reject the Null Hypothesis (that the means of each group are equal) for
-the Alternate Hypothesis (that the means of each group are not equal) for all
-but the last three rows in the table. In sum, Dose is a statistically
-significant variable in this experiment when convolved with the "supp" variable,
-and when deconvloved with the "supp" variable. The only time dose is not
-statistically significant is in the 1.0 dose VC, 2.0 dose OJ treatment condition
-and 2.0_VC, 0.5 OJ treatment condtion. It is important to note that when OJ and
-VC were compared globally they were not statistically different. When compared
-within each dose treatment group **they are** statistically different.
+when compared to each other level is statistically significant. In sum, Dose is
+a statistically significant variable in this experiment when convolved with the
+"supp" variable, and when deconvloved with the "supp" variable. The only time
+dose is not statistically significant is in the 1.0 dose VC, 2.0 dose OJ
+treatment condition and 2.0_VC, 0.5 OJ treatment condtion. It is important to
+note that when OJ and VC were compared globally they were not statistically
+different. When compared within each dose treatment group **they are**
+statistically different.
