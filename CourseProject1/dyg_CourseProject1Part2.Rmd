@@ -1,0 +1,79 @@
+---
+title: "dyg_CourseProject1Part2"
+author: "doyougnu"
+date: "July 25, 2015"
+output: html_document
+---
+
+##Overview
+
+Overview to be written in 3 sentences here
+
+```{r dataPeek, echo = TRUE}
+#load data
+library(datasets)
+library(ggplot2)
+data("ToothGrowth")
+df <- ToothGrowth
+
+#lets look at the data
+str(df)
+head(df)
+
+#do some quick plots
+qplot(data = df, x = len, facets = supp ~ dose, color = supp)
+```
+
+Interesting it looks like data under label "VC" is right shifted compared to 
+data under "OJ" for all levels of dose.
+
+Lets look at the confidence intervals for each the data grouped by the supp 
+variable, and by the dose variable
+
+```{r confInt, echo = TRUE}
+#perform unpaired t.test in R
+tResults <- t.test(len ~ supp, data = df, paired = FALSE)
+
+```
+
+The above code executes a two sample t test on the ToothGrowth dataset. I use
+the model statement format because it requires less code and is generally more
+readable in my opinion. Read it as, the variable len, by the variable supp, in
+the dataset df, unpaired t-test. One would generally use a paired t-test if the
+experimental samples are identical through the course of the treatment. Or to 
+relate it to the ToothGrowth dataset: The experiment uses 10 guinea pigs, and
+administers 3 different Vitamin C dose levels **but splits** the guinea pigs
+into two groups of Vitamin C application treatmenst. That is one group is "VC"
+and the other is "OJ", hence it is unpaired because **the same guinea pig is not
+undergoing both treament OJ and VC**.
+
+Looking at the results of the t.test the 95% confidence intervals are 
+`r tResults$conf.int` and the p-value was `r tResults$p.value` which is greater
+than 0.05, hence we reject the alternate hypothesis (that the means of the two
+samples is different), and accept the Null hypothesis (that the means of the two
+samples is the same). Note that the p-value is very close to the alpha value, 
+hence I would expect this to be statistically significant if more samples were
+collected (doing so in light of this data would be a violation of scientific
+standards in a study though - it is a well known method of p-value hacking)
+
+Not lets investigate the statistical difference between the dose groups. 
+Typically one would peform an ANOVA test to determine if any of the 3 dose 
+groups are significantly different, as we are limited to students t tests I will
+perform a t.test for each dose group combination. 
+
+```{r doseTests, echo = TRUE}
+#generate child datasets for VC
+dose.0.5 <- df[df$dose == 0.5 & df$supp == "VC"]
+dose.1.0 <- df[df$dose == 1 & df$supp == "VC"]
+dose.2.0 <- df[df$dose == 2 & df$supp == "VC"]
+
+#generate child datasets for OJ
+dose.0.5 <- df[df$dose == 0.5 & df$supp == "OJ"]
+dose.1.0 <- df[df$dose == 1 & df$supp == "OJ"]
+dose.2.0 <- df[df$dose == 2 & df$supp == "OJ"]
+
+#t.test between 0.5 and 1.0
+ttest_0.5 <- t.test(dose.0.5$len, dose.1.0$len, paired = TRUE)
+ttest_1.0 <- t.test(dose.1.0$len, dose.2.0$len, paired = TRUE)
+ttest_1.5 <- t.test(dose.0.5$len, dose.2.0$len, paired = TRUE)
+```
