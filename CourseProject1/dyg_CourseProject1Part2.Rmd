@@ -7,7 +7,12 @@ output: html_document
 
 ##Overview
 
-Overview to be written in 3 sentences here
+This brief report will explore the ToothGrowth base dataset with R, see C. I.
+Bliss (1952) The Statistics of Bioassay. Academic Press for more information. It
+will investigate the central questions of what variable/factors are
+statistically significant given the data through the use of two-sample student
+t-testing. This report finds that dose and dose administration method are both 
+statistically significant factors affects the length of guinea pig teeth.
 
 ```{r dataPeek, echo = TRUE}
 #load data
@@ -134,14 +139,14 @@ kable(dt)
 
 
 ##Conclusions
-Starting from the most significant p-value, we can see that every level of dose, when compared to each other level is statistically significant - that is
-to say that we reject the Null Hypothesis (that the means of each group are
-equal) for the Alternate Hypothesis (that the means of each group are not 
-equal) for all but the last three rows in the table. In sum, Dose is a 
-statistically significant variable in this experiment when convolved with the 
-"supp" variable, and when deconvloved with the "supp" variable. The only time
-dose is not statistically significant is in the 1.0 dose VC, 2.0 dose OJ
-treatment condition and 2.0_VC, 0.5 OJ treatment condtion. It is important to 
-note that when OJ and VC were compared globally they were not statistically 
-different. When compared within each dose treatment group **they are** 
-statistically different.
+Starting from the most significant p-value, we can see that every level of dose,
+when compared to each other level is statistically significant - that is to say
+that we reject the Null Hypothesis (that the means of each group are equal) for
+the Alternate Hypothesis (that the means of each group are not equal) for all
+but the last three rows in the table. In sum, Dose is a statistically
+significant variable in this experiment when convolved with the "supp" variable,
+and when deconvloved with the "supp" variable. The only time dose is not
+statistically significant is in the 1.0 dose VC, 2.0 dose OJ treatment condition
+and 2.0_VC, 0.5 OJ treatment condtion. It is important to note that when OJ and
+VC were compared globally they were not statistically different. When compared
+within each dose treatment group **they are** statistically different.

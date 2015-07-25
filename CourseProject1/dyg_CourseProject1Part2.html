@@ -70,7 +70,7 @@ img {
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>Overview to be written in 3 sentences here</p>
+<p>This brief report will explore the ToothGrowth base dataset with R, see C. I. Bliss (1952) The Statistics of Bioassay. Academic Press for more information. It will investigate the central questions of what variable/factors are statistically significant given the data through the use of two-sample student t-testing. This report finds that dose and dose administration method are both statistically significant factors affects the length of guinea pig teeth.</p>
 <pre class="r"><code>#load data
 library(datasets)
 library(ggplot2)
@@ -135,6 +135,9 @@ ttest_0.5_1.0_VC_OJ &lt;- ttest_helper(dose.0.5_VC, dose.1.0_OJ)
 ttest_1.0_2.0_VC_OJ &lt;- ttest_helper(dose.1.0_VC, dose.2.0_OJ) 
 ttest_2.0_0.5_VC_OJ &lt;- ttest_helper(dose.2.0_VC, dose.0.5_OJ) </code></pre>
 <p>Now lets checkout the results. Notice that these t_tests were “paired” as the</p>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
 <pre class="r"><code>#pack results in a container
 ttest_list &lt;- list(ttest_0.5_1.0_VC, ttest_1.0_2.0_VC, ttest_2.0_0.5_VC,
                 ttest_0.5_1.0_OJ, ttest_1.0_2.0_OJ, ttest_2.0_0.5_OJ,
@@ -248,7 +251,10 @@ kable(dt)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Starting from the most significant p-value, we can see that every level of dose, when compared to each other level is statistically significant - that is to say that we reject the Null Hypothesis (that the means of each group are equal) for the Alternate Hypothesis (that the means of each group are not equal) for all but the last three rows in the table. In sum, Dose is a statistically significant variable in this experiment when convolved with the “supp” variable, and when deconvloved with the “supp” variable. The only time dose is not statistically significant is between dose <strong>and</strong> supp levels.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>Starting from the most significant p-value, we can see that every level of dose, when compared to each other level is statistically significant - that is to say that we reject the Null Hypothesis (that the means of each group are equal) for the Alternate Hypothesis (that the means of each group are not equal) for all but the last three rows in the table. In sum, Dose is a statistically significant variable in this experiment when convolved with the “supp” variable, and when deconvloved with the “supp” variable. The only time dose is not statistically significant is in the 1.0 dose VC, 2.0 dose OJ treatment condition and 2.0_VC, 0.5 OJ treatment condtion. It is important to note that when OJ and VC were compared globally they were not statistically different. When compared within each dose treatment group <strong>they are</strong> statistically different.</p>
 </div>
 
 
