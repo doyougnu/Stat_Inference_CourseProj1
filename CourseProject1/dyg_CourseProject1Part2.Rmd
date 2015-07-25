@@ -63,17 +63,37 @@ perform a t.test for each dose group combination.
 
 ```{r doseTests, echo = TRUE}
 #generate child datasets for VC
-dose.0.5 <- df[df$dose == 0.5 & df$supp == "VC"]
-dose.1.0 <- df[df$dose == 1 & df$supp == "VC"]
-dose.2.0 <- df[df$dose == 2 & df$supp == "VC"]
+dose.0.5_VC <- df[df$dose == 0.5 & df$supp == "VC", ]
+dose.1.0_VC <- df[df$dose == 1 & df$supp == "VC", ]
+dose.2.0_VC <- df[df$dose == 2 & df$supp == "VC", ]
 
 #generate child datasets for OJ
-dose.0.5 <- df[df$dose == 0.5 & df$supp == "OJ"]
-dose.1.0 <- df[df$dose == 1 & df$supp == "OJ"]
-dose.2.0 <- df[df$dose == 2 & df$supp == "OJ"]
+dose.0.5_OJ <- df[df$dose == 0.5 & df$supp == "OJ", ]
+dose.1.0_OJ <- df[df$dose == 1 & df$supp == "OJ", ]
+dose.2.0_OJ <- df[df$dose == 2 & df$supp == "OJ", ]
 
 #t.test between 0.5 and 1.0
-ttest_0.5 <- t.test(dose.0.5$len, dose.1.0$len, paired = TRUE)
-ttest_1.0 <- t.test(dose.1.0$len, dose.2.0$len, paired = TRUE)
-ttest_1.5 <- t.test(dose.0.5$len, dose.2.0$len, paired = TRUE)
+ttest_helper <- function(df1, df2, compVar = "len", paired = TRUE) {
+    a <- t.test(df1[, compVar], df2[, compVar], paired = paired)
+    a
+}
+
+#perform within supp t.tests
+ttest_0.5_VC <- ttest_helper(dose.0.5_VC, dose.1.0_VC)
+ttest_1.0_VC <- ttest_helper(dose.1.0_VC, dose.2.0_VC)
+ttest_2.0_VC <- ttest_helper(dose.0.5_VC, dose.2.0_VC)
+
+ttest_0.5_OJ <- ttest_helper(dose.0.5_OJ, dose.1.0_OJ)
+ttest_1.0_OJ <- ttest_helper(dose.1.0_OJ, dose.2.0_OJ)
+ttest_2.0_OJ <- ttest_helper(dose.0.5_OJ, dose.2.0_OJ)
+
+#perform between supp groups t.tests
+ttest_0.5_VC_OJ <- ttest_helper(dose.0.5_VC, dose.0.5_OJ) 
+ttest_1.0_VC_OJ <- ttest_helper(dose.1.0_VC, dose.1.0_OJ) 
+ttest_2.0_VC_OJ <- ttest_helper(dose.2.0_VC, dose.2.0_OJ) 
+
+ttest_0.5_1.0_VC_OJ <- ttest_helper(dose.0.5_VC, dose.1.0_OJ) 
+ttest_1.0_2.0_VC_OJ <- ttest_helper(dose.1.0_VC, dose.2.0_OJ) 
+ttest_2.0_0.5_VC_OJ <- ttest_helper(dose.2.0_VC, dose.0.5_OJ) 
+
 ```
