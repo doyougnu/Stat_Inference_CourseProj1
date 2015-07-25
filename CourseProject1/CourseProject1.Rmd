@@ -70,12 +70,14 @@ library(gridExtra)
 library(gridBase)
 
 #plot QQ plot
-qQ <- qplot(sample = expMean, main = "QQ Plot of Simulated Sample Means")
+qQ <- qplot(sample = expMean, main = "QQ Plot of Simulated Sample Means") 
+
 qEQ <- qplot(sample = rexp(simnum, exp_lambda), main = "QQ plot of Random
              Exponential Deviates")
 
 #plot rexp deviates
-qE <- qplot(rexp(simnum, exp_lambda), main = "Distribution of Random Exponential Deviates",
+qE <- qplot(rexp(simnum, exp_lambda), 
+            main = "Distribution of Random Exponential Deviates",
             xlab = "Distribution of Random Exponential Deviates")
 
 #compare Variances visually
