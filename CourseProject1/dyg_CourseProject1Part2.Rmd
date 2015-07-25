@@ -1,5 +1,5 @@
 ---
-title: "dyg_CourseProject1Part2"
+title: "Course Project1 Part2"
 author: "doyougnu"
 date: "July 25, 2015"
 output: html_document
@@ -79,13 +79,13 @@ ttest_helper <- function(df1, df2, compVar = "len", paired = TRUE) {
 }
 
 #perform within supp t.tests
-ttest_0.5_VC <- ttest_helper(dose.0.5_VC, dose.1.0_VC)
-ttest_1.0_VC <- ttest_helper(dose.1.0_VC, dose.2.0_VC)
-ttest_2.0_VC <- ttest_helper(dose.0.5_VC, dose.2.0_VC)
+ttest_0.5_1.0_VC <- ttest_helper(dose.0.5_VC, dose.1.0_VC)
+ttest_1.0_2.0_VC <- ttest_helper(dose.1.0_VC, dose.2.0_VC)
+ttest_2.0_0.5_VC <- ttest_helper(dose.0.5_VC, dose.2.0_VC)
 
-ttest_0.5_OJ <- ttest_helper(dose.0.5_OJ, dose.1.0_OJ)
-ttest_1.0_OJ <- ttest_helper(dose.1.0_OJ, dose.2.0_OJ)
-ttest_2.0_OJ <- ttest_helper(dose.0.5_OJ, dose.2.0_OJ)
+ttest_0.5_1.0_OJ <- ttest_helper(dose.0.5_OJ, dose.1.0_OJ)
+ttest_1.0_2.0_OJ <- ttest_helper(dose.1.0_OJ, dose.2.0_OJ)
+ttest_2.0_0.5_OJ <- ttest_helper(dose.0.5_OJ, dose.2.0_OJ)
 
 #perform between supp groups t.tests
 ttest_0.5_VC_OJ <- ttest_helper(dose.0.5_VC, dose.0.5_OJ) 
@@ -95,5 +95,40 @@ ttest_2.0_VC_OJ <- ttest_helper(dose.2.0_VC, dose.2.0_OJ)
 ttest_0.5_1.0_VC_OJ <- ttest_helper(dose.0.5_VC, dose.1.0_OJ) 
 ttest_1.0_2.0_VC_OJ <- ttest_helper(dose.1.0_VC, dose.2.0_OJ) 
 ttest_2.0_0.5_VC_OJ <- ttest_helper(dose.2.0_VC, dose.0.5_OJ) 
+```
+
+Now lets checkout the results
+
+```{r ttestResults, echo = TRUE}
+#pack results in a container
+ttest_list <- list(ttest_0.5_1.0_VC, ttest_1.0_2.0_VC, ttest_2.0_0.5_VC,
+                ttest_0.5_1.0_OJ, ttest_1.0_2.0_OJ, ttest_2.0_0.5_OJ,
+                ttest_0.5_VC_OJ, ttest_1.0_VC_OJ, ttest_2.0_VC_OJ,
+                ttest_0.5_1.0_VC_OJ, ttest_1.0_2.0_VC_OJ, ttest_2.0_0.5_VC_OJ)
+
+#I couldn't figure out how to do this programmatically, seems to be hard to
+# in R
+ttest_list_names <-
+    c("ttest_0.5_1.0_VC", "ttest_1.0_2.0_VC", "ttest_2.0_0.5_VC",
+      "ttest_0.5_1.0_OJ", "ttest_1.0_2.0_OJ", "ttest_2.0_0.5_OJ",
+      "ttest_0.5_VC_OJ", "ttest_1.0_VC_OJ", "ttest_2.0_VC_OJ",
+      "ttest_0.5_1.0_VC_OJ", "ttest_1.0_2.0_VC_OJ", "ttest_2.0_0.5_VC_OJ")
+
+#extract pvalues and confidence intervals
+ttest_list_pvals <- lapply(ttest_list, function(x) {x[3]})
+ttest_list_confs <- lapply(ttest_list, function(x) {x[4]})
+
+#Make data table
+library(data.table)
+dt <- data.table(T_Test = 0, P_Value = rep(0, 12), Conf_Int1 = 0, Conf_Int2 = 0)
+dt[,1] <- ttest_list_names
+dt[,2] <- ttest_list_pvals
+dt[,3] <- ttest_list_confs[[1]]
+dt[,4] <- ttest_list_confs[[2]]
+
+#conver to real table
+require(knitr)
+kable(dt)
+
 
 ```
