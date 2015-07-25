@@ -73,7 +73,7 @@ dose.1.0_OJ <- df[df$dose == 1 & df$supp == "OJ", ]
 dose.2.0_OJ <- df[df$dose == 2 & df$supp == "OJ", ]
 
 #t.test between 0.5 and 1.0
-ttest_helper <- function(df1, df2, compVar = "len", paired = TRUE) {
+ttest_helper <- function(df1, df2, compVar = "len", paired = FALSE) {
     a <- t.test(df1[, compVar], df2[, compVar], paired = paired)
     a
 }
@@ -97,9 +97,10 @@ ttest_1.0_2.0_VC_OJ <- ttest_helper(dose.1.0_VC, dose.2.0_OJ)
 ttest_2.0_0.5_VC_OJ <- ttest_helper(dose.2.0_VC, dose.0.5_OJ) 
 ```
 
-Now lets checkout the results
+Now lets checkout the results. Notice that these t_tests were "paired" as the
 
-```{r ttestResults, echo = TRUE}
+##Results
+```{r ttestResults, echo = TRUE, warning = FALSE}
 #pack results in a container
 ttest_list <- list(ttest_0.5_1.0_VC, ttest_1.0_2.0_VC, ttest_2.0_0.5_VC,
                 ttest_0.5_1.0_OJ, ttest_1.0_2.0_OJ, ttest_2.0_0.5_OJ,
@@ -115,7 +116,7 @@ ttest_list_names <-
       "ttest_0.5_1.0_VC_OJ", "ttest_1.0_2.0_VC_OJ", "ttest_2.0_0.5_VC_OJ")
 
 #extract pvalues and confidence intervals
-ttest_list_pvals <- lapply(ttest_list, function(x) {x[3]})
+ttest_list_pvals <- sort(unlist(lapply(ttest_list, function(x) {x[3][1]})))
 ttest_list_confs <- lapply(ttest_list, function(x) {x[4]})
 
 #Make data table
@@ -126,9 +127,21 @@ dt[,2] <- ttest_list_pvals
 dt[,3] <- ttest_list_confs[[1]]
 dt[,4] <- ttest_list_confs[[2]]
 
-#conver to real table
-require(knitr)
+#convert to real table
+library(knitr)
 kable(dt)
-
-
 ```
+
+
+##Conclusions
+Starting from the most significant p-value, we can see that every level of dose, when compared to each other level is statistically significant - that is
+to say that we reject the Null Hypothesis (that the means of each group are
+equal) for the Alternate Hypothesis (that the means of each group are not 
+equal) for all but the last three rows in the table. In sum, Dose is a 
+statistically significant variable in this experiment when convolved with the 
+"supp" variable, and when deconvloved with the "supp" variable. The only time
+dose is not statistically significant is in the 1.0 dose VC, 2.0 dose OJ
+treatment condition and 2.0_VC, 0.5 OJ treatment condtion. It is important to 
+note that when OJ and VC were compared globally they were not statistically 
+different. When compared within each dose treatment group **they are** 
+statistically different.
