@@ -6,10 +6,11 @@ output: pdf_document
 ---
 
 ##Overview
-Then following report will show the Central Limit Theorem (henceforth [CLT]) in action through 
-the generation of a distribution of sample means, calculated from 1000 simulations of 40 random
-exponential deviates. The report will show that the sample mean distribution obeys the CLT 
-by being normal-like distributed, while the population distribution is exponential.
+Then following report will show the Central Limit Theorem (henceforth [CLT]) in
+action through the generation of a distribution of sample means, calculated from
+1000 simulations of 40 random exponential deviates. The report will show that
+the sample mean distribution obeys the CLT by being normal-like distributed,
+while the population distribution is exponential.
 
 ##Simulations
 ```{r Simulations, echo = TRUE}
@@ -28,10 +29,11 @@ simMatrix <- matrix(rexp(exp_n * simnum, rate = exp_lambda), simnum, exp_n)
 expMean <- rowMeans(simMatrix)
 ```
 
-The simulation is done by generating 40,000 random exponential deviates with a lambda value = 0.2. Then
-populating a 1000 x 40 matrix with those values. We then call the rowMeans function to find the mean of
-each row (that is the mean of 40 simulation random exponential deviates). The rowMeans create our 
-simulation distribution of means, called expMean. 
+The simulation is done by generating 40,000 random exponential deviates with a
+lambda value = 0.2. Then populating a 1000 x 40 matrix with those values. We
+then call the rowMeans function to find the mean of each row (that is the mean
+of 40 simulation random exponential deviates). The rowMeans create our 
+simulation distribution of means, called expMean.
 
 ##Plots Comparing Simulation to Population
 ```{r meanComp, echo = TRUE}
@@ -40,7 +42,8 @@ popMean <- 1 / exp_lambda
 simMean <- mean(expMean)
 ```
 
-The means are very close, the population mean is `r popMean`, the simulated mean is `r simMean`
+The means are very close, the population mean is `r popMean`, the simulated mean
+is `r simMean`
 
 ```{r varComp, echo = TRUE}
 #Compare Variances
@@ -48,7 +51,8 @@ popVariance <- (1 / exp_lambda) ^ 2 / exp_n
 simVariance <- var(expMean)
 ```
 
-Similarly for the Variances, the pop variance is `r popVariance`, the sim variance is `r simVariance`
+Similarly for the Variances, the pop variance is `r popVariance`, the sim
+variance is `r simVariance`
 
 ##Normality test
 ```{r normTest, echo = TRUE, fig.height=17, fig.width=17}
@@ -57,10 +61,11 @@ Similarly for the Variances, the pop variance is `r popVariance`, the sim varian
 shapiro.test(expMean)
 
 ```
-The shapiro wilk's normality test, test's the Null Hypothesis: That the samples come from a
-normal distribution, against the alternate Hypothesis: That the samples **do not** come from
-a normal distribution. As shown above, our p-value is < 0.05, so our samples do not form a
-normal distribution, but instead are normal-like.
+The shapiro wilk's normality test, test's the Null Hypothesis: That the samples
+come from a normal distribution, against the alternate Hypothesis: That the
+samples **do not** come from a normal distribution. As shown above, our p-value
+is < 0.05, so our samples do not form a normal distribution, but instead are
+normal-like.
 
 ##Visual Comparison of Exponential Population vs. Samples
 ```{r plotCompare, echo = TRUE, warning = FALSE, fig.height=17, fig.width=17}
